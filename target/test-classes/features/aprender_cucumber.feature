@@ -32,9 +32,9 @@ Cenario: Deve calcular atraso na entrega da china
 	
 Cenario: Deve criar steps genéricos para estes passos
 	Dado que o ticket é AF345
-	Dado que o valor da passagem é R$ 230,45
-	Dado que o nome do passageiro é "Tayná da Silva"
-	Dado que o telefone do passageiro é 9999-9999
+	E que o valor da passagem é R$ 230,45
+	E que o nome do passageiro é "Tayná da Silva"
+	E que o telefone do passageiro é 9999-9999
 	Quando criar steps
 	Entao o teste vai funcionar
 	
