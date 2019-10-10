@@ -21,6 +21,11 @@ Cenario: Deve incrementar contador
 		Então o valor do contador será 158		
 		
 Cenario: Deve calcular atraso na entrega
-Dado que a entrega é dia 05/04/2018
-Quando a entrega atrasar em 2 dias
-Então a entrega será efetuada em 07/04/2018
+	Dado que a entrega é dia 05/04/2018
+	Quando a entrega atrasar em 2 dias
+	Então a entrega será efetuada em 07/04/2018
+
+Cenario: Deve calcular atraso na entrega da china
+	Dado que a entrega é dia 05/04/2018
+	Quando a entrega atrasar em 2 meses
+	Entao a entrega será efetuada em 05/06/2018
