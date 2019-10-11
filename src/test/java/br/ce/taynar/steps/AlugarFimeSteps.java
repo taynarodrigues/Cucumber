@@ -8,6 +8,7 @@ import org.junit.Assert;
 
 import br.ce.taynar.entidades.Filme;
 import br.ce.taynar.entidades.NotaAluguel;
+import br.ce.taynar.entidades.TipoAluguel;
 import br.ce.taynar.servicos.AluguelService;
 import br.ce.taynar.utils.DateUtils;
 import cucumber.api.java.es.Dado;
@@ -21,7 +22,7 @@ public class AlugarFimeSteps {
 	private AluguelService aluguel = new AluguelService();
 	private NotaAluguel nota;
 	private String erro;
-	private String tipoAluguel;
+	private TipoAluguel tipoAluguel = TipoAluguel.COMUM;
 	
 	@Dado("^um filme com estoque de (\\d+) unidades$")
 	public void umFilmeComEstoqueDeUnidades(int arg1) throws Throwable {
@@ -59,10 +60,9 @@ public class AlugarFimeSteps {
 	    Assert.assertEquals("Filme sem estoque", erro);
 	}
 	
-	//aqui
 	@Dado("^que o tipo do aluguel seja (.*)$")
 	public void que_o_tipo_do_aluguel_seja_extendido(String tipo) throws Throwable {
-	    tipoAluguel = tipo;
+	    tipoAluguel = tipo.equals("semanal")? TipoAluguel.SEMANAL: tipo.equals("extendido")? TipoAluguel.EXTENDIDO: TipoAluguel.COMUM;
 	}
 
 	@Então("^a data de entrega será em (\\d+) dias?$")
