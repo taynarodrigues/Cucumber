@@ -3,6 +3,7 @@ package br.ce.taynar.steps;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import org.junit.Assert;
 
@@ -11,6 +12,7 @@ import br.ce.taynar.entidades.NotaAluguel;
 import br.ce.taynar.entidades.TipoAluguel;
 import br.ce.taynar.servicos.AluguelService;
 import br.ce.taynar.utils.DateUtils;
+import cucumber.api.DataTable;
 import cucumber.api.java.es.Dado;
 import cucumber.api.java.it.Quando;
 import cucumber.api.java.pt.Então;
@@ -22,7 +24,7 @@ public class AlugarFimeSteps {
 	private AluguelService aluguel = new AluguelService();
 	private NotaAluguel nota;
 	private String erro;
-	private TipoAluguel tipoAluguel = TipoAluguel.COMUM;
+	private TipoAluguel tipoAluguel;
 	
 	@Dado("^um filme com estoque de (\\d+) unidades$")
 	public void umFilmeComEstoqueDeUnidades(int arg1) throws Throwable {
@@ -33,6 +35,17 @@ public class AlugarFimeSteps {
 	@Dado("^que o preço de aluguel seja R\\$ (\\d+)$")
 	public void queOPreçoDeAluguelSejaR$(int arg1) throws Throwable {
 	    filme.setAluguel(arg1);
+	}
+	
+	
+	@Dado("^um filme$")
+	public void um_filme(DataTable table) throws Throwable {
+		Map<String, String> map = table.asMap(String.class, String.class);
+		filme = new Filme();
+	    filme.setEstoque(Integer.parseInt(map.get("estoque")));
+	    filme.setAluguel(Integer.parseInt(map.get("preco")));
+	    String tipo = map.get("tipo");
+	    tipoAluguel = tipo.equals("semanal")? TipoAluguel.SEMANAL: tipo.equals("extendido")? TipoAluguel.EXTENDIDO: TipoAluguel.COMUM;
 	}
 
 	@Quando("^alugar$")
