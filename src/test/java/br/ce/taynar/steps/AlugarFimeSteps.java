@@ -1,16 +1,19 @@
 package br.ce.taynar.steps;
 
-import java.util.Calendar;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.junit.Assert;
 
 import br.ce.taynar.entidades.Filme;
 import br.ce.taynar.entidades.NotaAluguel;
 import br.ce.taynar.servicos.AluguelService;
-import cucumber.api.PendingException;
+import br.ce.taynar.utils.DateUtils;
 import cucumber.api.java.es.Dado;
 import cucumber.api.java.it.Quando;
 import cucumber.api.java.pt.Então;
-import junit.framework.Assert;
+
 
 public class AlugarFimeSteps {
 	
@@ -18,6 +21,7 @@ public class AlugarFimeSteps {
 	private AluguelService aluguel = new AluguelService();
 	private NotaAluguel nota;
 	private String erro;
+	private String tipoAluguel;
 	
 	@Dado("^um filme com estoque de (\\d+) unidades$")
 	public void umFilmeComEstoqueDeUnidades(int arg1) throws Throwable {
@@ -33,7 +37,7 @@ public class AlugarFimeSteps {
 	@Quando("^alugar$")
 	public void alugar() throws Throwable {
 		try {
-			nota = aluguel.alugar(filme);
+			nota = aluguel.alugar(filme, tipoAluguel);
 		}catch (RuntimeException e) {
 			erro = e.getMessage();
 		}
@@ -45,21 +49,6 @@ public class AlugarFimeSteps {
 	    Assert.assertEquals(arg1, nota.getPreco());
 	}
 
-	@Então("^a data de entrega será no dia seguinte$")
-	public void aDataDeEntregaSeráNoDiaSeguinte() throws Throwable {
-	  Calendar cal = Calendar.getInstance();
-	  cal.add(Calendar.DAY_OF_MONTH, 1);
-	  
-	  Date dataRetorno = nota.getDataEntrega();
-	  Calendar calRetorno = Calendar.getInstance();
-	  calRetorno.setTime(dataRetorno);
-	  
-	  Assert.assertEquals(cal.get(Calendar.DAY_OF_MONTH), calRetorno.get(Calendar.DAY_OF_MONTH));
-	  Assert.assertEquals(cal.get(Calendar.MONTH), calRetorno.get(Calendar.MONTH));
-	  Assert.assertEquals(cal.get(Calendar.YEAR), calRetorno.get(Calendar.YEAR));
-	  
-	}
-
 	@Então("^o estoque do filme será (\\d+) unidade$")
 	public void oEstoqueDoFilmeSeráUnidade(int arg1) throws Throwable {
 	    Assert.assertEquals(arg1, filme.getEstoque());
@@ -69,6 +58,25 @@ public class AlugarFimeSteps {
 	public void nãoSeráPossívelPorFaltaDeEstoque() throws Throwable {
 	    Assert.assertEquals("Filme sem estoque", erro);
 	}
+	
+	//aqui
+	@Dado("^que o tipo do aluguel seja (.*)$")
+	public void que_o_tipo_do_aluguel_seja_extendido(String tipo) throws Throwable {
+	    tipoAluguel = tipo;
+	}
 
+	@Então("^a data de entrega será em (\\d+) dias?$")
+	public void a_data_de_entrega_será_em_dias(int arg1) throws Throwable {
+	    Date dataEsperada = DateUtils.obterDataDiferencaDias(arg1);
+	    Date dataReal = nota.getDataEntrega();
+	    
+	    DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+	    
+	    Assert.assertEquals(format.format(dataEsperada), format.format(dataReal));
+	}
 
+	@Então("^a pontuação será de (\\d+) pontos$")
+	public void a_pontuação_será_de_pontos(int arg1) throws Throwable {
+	    Assert.assertEquals(arg1, nota.getPontuacao());
+	}
 }
